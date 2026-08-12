@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Freshly prepared cakes, pastries, cookies and dessert boxes for pickup and delivery from e-Sweets."
+    />
+    <meta name="theme-color" content="#fff7eb" />
+    <meta property="og:title" content="e-Sweets — Sweet moments, made fresh." />
+    <meta
+      property="og:description"
+      content="Freshly made sweets for everyday cravings, thoughtful gifts and unforgettable celebrations."
+    />
+    <title>e-Sweets</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script type="module" src="js/home.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <!-- Announcement -->
+    <div class="announcement" id="announcement">
+      <p>
+        <span aria-hidden="true">✦</span> Free delivery for orders above ₱1,000
+      </p>
+      <button id="closeAnnouncement" aria-label="Dismiss announcement">
+        ×
+      </button>
+    </div>
+
+    <!-- Navigation -->
+    <header class="site-header">
+      <nav class="nav shell" aria-label="Main navigation">
+        <a class="brand" href="index.html" aria-label="e-Sweets home">
+          <span class="brand-mark" aria-hidden="true">e<span>◌</span></span>
+          <span>e-Sweets<small>BAKED WITH JOY</small></span>
+        </a>
+
+        <button
+          class="menu-toggle icon-button"
+          id="menuToggle"
+          aria-expanded="false"
+          aria-controls="navLinks"
+          aria-label="Open menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
+
+        <div class="nav-links" id="navLinks">
+          <a class="active" href="#home" aria-current="location">Home</a>
+          <a href="#categories">Categories</a>
+          <a href="#shop">Shop</a>
+          <a href="#custom">Custom Orders</a>
+          <a href="#story">Our Story</a>
+          <a href="#contact">Contact</a>
+        </div>
+
+        <div class="nav-actions">
+          <button
+            class="icon-button"
+            id="searchOpen"
+            aria-label="Search products"
+          >
+            ⌕
+          </button>
+          <a
+            class="icon-button account-link"
+            href="login.html"
+            aria-label="Customer account"
+            >♙</a
+          >
+          <button class="cart-button" id="cartOpen" aria-label="Open cart">
+            <span aria-hidden="true">⌑</span><span class="cart-label">Cart</span
+            ><b id="cartCount">0</b>
+          </button>
+          <a class="button button-small" href="#shop">Order now</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main">
+      <!-- Hero -->
+      <section class="hero" id="home">
+        <div class="hero-copy shell">
+          <p class="eyebrow">FRESH FROM OUR KITCHEN</p>
+          <h1>A little sweetness<br />for <em>every moment.</em></h1>
+          <p class="hero-lede">
+            Freshly prepared cakes, pastries, cookies and dessert boxes—made for
+            everyday cravings, thoughtful gifts and unforgettable celebrations.
+          </p>
+          <div class="hero-buttons">
+            <a class="button" href="#shop"
+              >Shop our sweets <span aria-hidden="true">→</span></a
+            >
+            <a class="button button-ghost" href="#custom"
+              >Create a custom order</a
+            >
+          </div>
+          <ul class="trust-list" aria-label="Why order with us">
+            <li><span>✓</span> Freshly prepared</li>
+            <li><span>✓</span> Secure ordering</li>
+            <li><span>✓</span> Pickup & delivery</li>
+          </ul>
+        </div>
+        <div
+          class="hero-visual"
+          role="img"
+          aria-label="Pink celebration cake with piped frosting"
+        >
+          <div class="hero-note">
+            <span>♥</span><strong>Made fresh</strong
+            ><small>with quality ingredients</small>
+          </div>
+        </div>
+        <div class="hero-ribbon">
+          <span>CAKES</span> ✦ <span>COOKIES</span> ✦ <span>CUPCAKES</span> ✦
+          <span>PASTRIES</span> ✦ <span>DESSERT BOXES</span>
+        </div>
+      </section>
+
+      <!-- Categories -->
+      <section class="section categories shell" id="categories">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">FIND YOUR FAVORITE</p>
+            <h2>Sweetness, your way.</h2>
+          </div>
+          <p>
+            From quiet afternoon treats to centerpieces for the biggest
+            celebrations.
+          </p>
+        </div>
+        <div class="category-grid">
+          <a
+            class="category-card category-large"
+            href="#shop"
+            data-filter="Cakes"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=900&q=82"
+              alt="Chocolate layer cake topped with berries"
+              loading="lazy"
+              decoding="async"
+              sizes="(max-width: 720px) 100vw, 50vw"
+            />
+            <span
+              ><b>Cakes</b><small>For every reason to celebrate</small
+              ><i>Shop cakes →</i></span
+            >
+          </a>
+          <a class="category-card" href="#shop" data-filter="Cupcakes">
+            <img
+              src="https://images.unsplash.com/photo-1486427944299-d1955d23e34d?auto=format&fit=crop&w=700&q=82"
+              alt="Assorted frosted cupcakes"
+              loading="lazy"
+              decoding="async"
+              sizes="(max-width: 720px) 50vw, 25vw"
+            />
+            <span
+              ><b>Cupcakes</b
+              ><small>Little joys, beautifully topped</small></span
+            >
+          </a>
+          <a class="category-card" href="#shop" data-filter="Cookies">
+            <img
+              src="https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=700&q=82"
+              alt="Fresh chocolate chip cookies"
+              loading="lazy"
+              decoding="async"
+              sizes="(max-width: 720px) 50vw, 25vw"
+            />
+            <span><b>Cookies</b><small>Chewy, crisp and shareable</small></span>
+          </a>
+          <a class="category-card" href="#shop" data-filter="Pastries">
+            <img
+              src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=700&q=82"
+              alt="Golden flaky croissants"
+              loading="lazy"
+              decoding="async"
+              sizes="(max-width: 720px) 100vw, 25vw"
+            />
+            <span
+              ><b>Pastries</b><small>Buttery layers, baked fresh</small></span
+            >
+          </a>
+        </div>
+      </section>
+
+      <!-- Products -->
+      <section class="section shop-section" id="shop">
+        <div class="shell">
+          <div class="section-heading shop-heading">
+            <div>
+              <p class="eyebrow">CUSTOMER FAVORITES</p>
+              <h2>Meet the best sellers.</h2>
+            </div>
+            <div class="filter-pills" aria-label="Filter products">
+              <button class="active" data-product-filter="All">
+                All treats
+              </button>
+              <button data-product-filter="Cakes">Cakes</button>
+              <button data-product-filter="Cookies">Cookies</button>
+              <button data-product-filter="Pastries">Pastries</button>
+            </div>
+          </div>
+          <div class="product-grid" id="productGrid" aria-live="polite"></div>
+          <div class="center">
+            <button class="text-link" id="viewAll">
+              View all products <span>→</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="custom section shell" id="custom">
+        <div class="custom-copy">
+          <p class="eyebrow">MADE JUST FOR YOU</p>
+          <h2>Your celebration,<br /><em>made sweeter.</em></h2>
+          <p>
+            Planning something special? Tell us your colors, flavors, theme and
+            guest count. We’ll help shape a dessert made for your moment.
+          </p>
+          <ul>
+            <li>Birthday & wedding cakes</li>
+            <li>Corporate gifts</li>
+            <li>Party dessert tables</li>
+            <li>Personalized dessert boxes</li>
+          </ul>
+          <button class="button button-dark" id="customOrderOpen">
+            Request a custom order <span>→</span>
+          </button>
+        </div>
+        <div class="custom-collage">
+          <img
+            class="collage-main"
+            src="https://images.unsplash.com/photo-1535254973040-607b474cb50d?auto=format&fit=crop&w=900&q=82"
+            alt="Elegant celebration cake with flowers"
+            loading="lazy"
+            decoding="async"
+            sizes="(max-width: 720px) 100vw, 50vw"
+          />
+          <img
+            class="collage-small"
+            src="https://images.unsplash.com/photo-1587668178277-295251f900ce?auto=format&fit=crop&w=500&q=82"
+            alt="Pink frosted cupcakes"
+            loading="lazy"
+            decoding="async"
+            sizes="150px"
+          />
+          <span class="scribble">made for<br />your moment ♥</span>
+        </div>
+      </section>
+
+      <section class="how section">
+        <div class="shell">
+          <div class="center-heading">
+            <p class="eyebrow">SIMPLE FROM START TO SWEET</p>
+            <h2>How ordering works.</h2>
+          </div>
+          <ol class="steps">
+            <li>
+              <b>01</b><span>⌕</span>
+              <h3>Choose your sweets</h3>
+              <p>Browse the collection and find your favorites.</p>
+            </li>
+            <li>
+              <b>02</b><span>✎</span>
+              <h3>Make it yours</h3>
+              <p>Select options and add a personal message.</p>
+            </li>
+            <li>
+              <b>03</b><span>⌂</span>
+              <h3>Pick a schedule</h3>
+              <p>Choose pickup or delivery, date and time.</p>
+            </li>
+            <li>
+              <b>04</b><span>♡</span>
+              <h3>Receive & enjoy</h3>
+              <p>We prepare, pack and send your order with care.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="story section" id="story">
+        <div class="story-image">
+          <img
+            src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1000&q=82"
+            alt="Baker carefully preparing fresh pastries"
+            loading="lazy"
+            decoding="async"
+            sizes="(max-width: 720px) 100vw, 50vw"
+          />
+          <div class="story-stamp">BAKED<br />WITH<br />CARE</div>
+        </div>
+        <div class="story-copy">
+          <p class="eyebrow">OUR STORY</p>
+          <h2>Ordinary days deserve something <em>special.</em></h2>
+          <p>
+            e-Sweets began with a simple belief: every day has room for a little
+            joy. Every item is prepared with care, thoughtful ingredients and
+            the goal of making each order feel personal.
+          </p>
+          <p>
+            We bake in small batches, pack for freshness and welcome every
+            order—whether it is a quiet treat for one or the centerpiece of a
+            celebration.
+          </p>
+          <a class="button button-dark" href="#story"
+            >Discover our story <span>→</span></a
+          >
+        </div>
+      </section>
+
+      <section class="values section shell">
+        <div class="center-heading">
+          <p class="eyebrow">THE E-SWEETS WAY</p>
+          <h2>Freshness you can taste.</h2>
+        </div>
+        <div class="values-grid">
+          <article>
+            <span>♡</span>
+            <h3>Prepared with care</h3>
+            <p>
+              Every detail is handled thoughtfully, from mixing to the final
+              ribbon.
+            </p>
+          </article>
+          <article>
+            <span>✦</span>
+            <h3>Quality ingredients</h3>
+            <p>
+              Chosen for flavor, texture and a treat you will look forward to.
+            </p>
+          </article>
+          <article>
+            <span>◒</span>
+            <h3>Small-batch baking</h3>
+            <p>
+              Made in considered batches for better consistency and freshness.
+            </p>
+          </article>
+          <article>
+            <span>⌂</span>
+            <h3>Packed for freshness</h3>
+            <p>Carefully boxed so your sweets arrive ready to enjoy or gift.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Reviews -->
+      <section class="reviews section shell">
+        <div class="review-copy">
+          <p class="eyebrow">KIND WORDS</p>
+          <h2>Shared by our sweet community.</h2>
+          <p>
+            Verified customer reviews will appear here after purchase and store
+            approval. We never publish invented testimonials.
+          </p>
+        </div>
+        <div class="review-empty">
+          <span>“</span>
+          <h3>Reviews are coming soon.</h3>
+          <p>
+            Completed-order customers will be able to share honest feedback
+            here.
+          </p>
+        </div>
+      </section>
+
+      <section class="newsletter section">
+        <div class="newsletter-inner shell">
+          <div>
+            <p class="eyebrow">A LITTLE JOY IN YOUR INBOX</p>
+            <h2>Be first in line<br />for the sweet stuff.</h2>
+          </div>
+          <form id="newsletterForm" novalidate>
+            <label for="newsletterEmail">Email address</label>
+            <div>
+              <input
+                id="newsletterEmail"
+                type="email"
+                placeholder="you@example.com"
+                required
+              /><button class="button" type="submit">Count me in →</button>
+            </div>
+            <small
+              >By subscribing, you agree to receive e-Sweets news and
+              promotions. Unsubscribe anytime.</small
+            >
+            <p class="form-message" id="newsletterMessage" role="status"></p>
+          </form>
+        </div>
+      </section>
+
+      <section class="final-cta" id="contact">
+        <p class="eyebrow">FRESH BATCHES ARE WAITING</p>
+        <h2>Ready to make today <em>sweeter?</em></h2>
+        <div>
+          <a class="button button-dark" href="#shop">Browse products</a
+          ><button class="button button-ghost" id="contactOpen" type="button">
+            Contact e-Sweets
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-main shell">
+        <div>
+          <a class="brand footer-brand" href="#"
+            ><span class="brand-mark">e<span>◌</span></span
+            ><span>e-Sweets<small>BAKED WITH JOY</small></span></a
+          >
+          <p>
+            Freshly made sweets for everyday joy, thoughtful gifts and
+            unforgettable celebrations.
+          </p>
+        </div>
+        <div>
+          <h3>Explore</h3>
+          <a href="#shop">Shop all</a><a href="#categories">Categories</a
+          ><a href="#custom">Custom orders</a><a href="#story">Our story</a>
+        </div>
+        <div>
+          <h3>Help</h3>
+          <a href="#">FAQs</a><a href="#">Order tracking</a
+          ><a href="#contact">Contact</a><a href="#">Allergen guide</a>
+        </div>
+        <!-- Contact details -->
+        <div>
+          <h3>Visit & contact</h3>
+          <p>[Store address]</p>
+          <p>[Business hours]</p>
+          <a href="mailto:[store-email]">[Store email]</a
+          ><a href="tel:[mobile-number]">[Mobile number]</a>
+        </div>
+      </div>
+      <div class="footer-bottom shell">
+        <span>© <span id="year"></span> e-Sweets. All rights reserved.</span
+        ><span
+          ><a href="#">Privacy</a><a href="#">Terms</a
+          ><a href="#">Accessibility</a></span
+        >
+      </div>
+    </footer>
+
+    <!-- Storefront dialogs -->
+    <div class="overlay" id="overlay"></div>
+    <aside
+      class="drawer"
+      id="cartDrawer"
+      aria-labelledby="cartTitle"
+      aria-hidden="true"
+    >
+      <div class="drawer-head">
+        <div>
+          <p class="eyebrow">YOUR ORDER</p>
+          <h2 id="cartTitle">Sweet cart</h2>
+        </div>
+        <button
+          class="icon-button drawer-close"
+          data-close
+          aria-label="Close cart"
+        >
+          ×
+        </button>
+      </div>
+      <div id="cartItems" class="cart-items"></div>
+      <div class="cart-footer">
+        <div><span>Subtotal</span><strong id="cartSubtotal">₱0</strong></div>
+        <small>Delivery and discounts are calculated at checkout.</small
+        ><button class="button button-dark" id="checkoutButton">
+          Proceed to checkout →
+        </button>
+      </div>
+    </aside>
+
+    <dialog id="quickViewDialog" class="purchase-dialog">
+      <button
+        class="icon-button modal-close"
+        data-dialog-close
+        aria-label="Close"
+      >
+        ×
+      </button>
+      <div id="quickViewContent"></div>
+    </dialog>
+
+    <dialog id="checkoutDialog" class="checkout-dialog">
+      <button class="icon-button modal-close" data-dialog-close aria-label="Close checkout">×</button>
+      <form id="checkoutForm" class="checkout-layout">
+        <section class="checkout-form-panel">
+          <p class="eyebrow">SECURE CHECKOUT</p><h2>Complete your order.</h2>
+          <div class="checkout-step"><span>1</span><div><h3>Contact information</h3><p>We’ll use these details for your order updates.</p></div></div>
+          <div class="form-grid checkout-fields"><label>Full name<input name="name" autocomplete="name" required></label><label>Mobile number<input name="phone" type="tel" autocomplete="tel" required></label><label class="full">Email address<input name="email" type="email" autocomplete="email" required></label></div>
+          <div class="checkout-step"><span>2</span><div><h3>How would you like your sweets?</h3><p>Select fulfillment and a preferred date.</p></div></div>
+          <fieldset class="fulfillment-options"><label><input type="radio" name="fulfillment" value="delivery" checked><span><b>Local delivery</b><small>Fee confirmed by the store</small></span></label><label><input type="radio" name="fulfillment" value="pickup"><span><b>Store pickup</b><small>No delivery fee</small></span></label></fieldset>
+          <div class="form-grid checkout-fields"><label class="full" id="deliveryAddressField">Delivery address<textarea name="address" rows="2" autocomplete="street-address" required></textarea></label><label>Preferred date<input name="date" type="date" required></label><label>Preferred time<select name="time" required><option value="">Select a time</option><option>9:00 AM – 12:00 PM</option><option>12:00 PM – 3:00 PM</option><option>3:00 PM – 6:00 PM</option></select></label><label class="full">Order note <span>(optional)</span><textarea name="note" rows="2" placeholder="Message on the cake, delivery instructions, or gift note"></textarea></label></div>
+          <div class="checkout-step"><span>3</span><div><h3>Payment</h3><p>Payment collection will be confirmed by the store.</p></div></div>
+          <fieldset class="payment-options"><label><input type="radio" name="payment" value="cash" checked><span><b>Cash on delivery / pickup</b><small>Pay when you receive your order</small></span></label><label><input type="radio" name="payment" value="online" disabled><span><b>Online payment</b><small>Coming soon</small></span></label></fieldset>
+        </section>
+        <aside class="checkout-summary"><p class="eyebrow">YOUR ORDER</p><h3>Order summary</h3><div id="checkoutItems"></div><dl><div><dt>Subtotal</dt><dd id="checkoutSubtotal">₱0</dd></div><div><dt>Delivery</dt><dd id="checkoutDelivery">Confirmed later</dd></div><div class="checkout-total"><dt>Total today</dt><dd id="checkoutTotal">₱0</dd></div></dl><button class="button button-dark" type="submit">Place order →</button><small>By placing your order, you confirm that the details above are correct.</small><p class="form-message" id="checkoutMessage" role="status"></p></aside>
+      </form>
+      <div class="order-success" id="orderSuccess" hidden></div>
+    </dialog>
+    <dialog id="customOrderDialog">
+      <button
+        class="icon-button modal-close"
+        data-dialog-close
+        aria-label="Close"
+      >
+        ×
+      </button>
+      <form class="custom-form" id="customForm">
+        <p class="eyebrow">CUSTOM CELEBRATION</p>
+        <h2>Tell us what you’re dreaming of.</h2>
+        <p>
+          We’ll save your request on this device as a draft. Store submission
+          will be connected when the backend is configured.
+        </p>
+        <div class="form-grid">
+          <label>Name<input name="name" required /></label
+          ><label>Email<input name="email" type="email" required /></label
+          ><label>Event date<input name="date" type="date" required /></label
+          ><label
+            >Event type<select name="type">
+              <option>Birthday</option>
+              <option>Wedding</option>
+              <option>Corporate gift</option>
+              <option>Other celebration</option>
+            </select></label
+          ><label class="full"
+            >Tell us about your order<textarea
+              name="details"
+              rows="4"
+              required
+              placeholder="Product, size, flavor, colors, theme and guest count"
+            ></textarea>
+          </label>
+        </div>
+        <button class="button button-dark" type="submit">
+          Save inquiry draft →
+        </button>
+        <p class="form-message" id="customMessage" role="status"></p>
+      </form>
+    </dialog>
+
+    <dialog id="contactDialog">
+      <button
+        class="icon-button modal-close"
+        data-dialog-close
+        aria-label="Close contact form"
+      >
+        ×
+      </button>
+      <form class="custom-form" id="contactForm">
+        <p class="eyebrow">WE’RE HERE TO HELP</p>
+        <h2>Tell us your concern.</h2>
+        <p>
+          Share the details below and we’ll make sure your concern is ready for
+          the e-Sweets team.
+        </p>
+        <div class="form-grid">
+          <label>Name<input name="name" autocomplete="name" required /></label>
+          <label
+            >Email<input
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+          /></label>
+          <label class="full"
+            >What is this about?
+            <select name="concern" required>
+              <option value="">Choose a concern</option>
+              <option>Product question</option>
+              <option>Order status</option>
+              <option>Pickup or delivery</option>
+              <option>Payment concern</option>
+              <option>Custom order</option>
+              <option>Account concern</option>
+              <option>Other</option>
+            </select>
+          </label>
+          <label class="full"
+            >How can we help?
+            <textarea
+              name="message"
+              rows="5"
+              required
+              placeholder="Please include an order number when your concern is about an existing order."
+            ></textarea>
+          </label>
+        </div>
+        <button class="button button-dark" type="submit">
+          Save concern draft →
+        </button>
+        <p class="form-message" id="contactMessage" role="status"></p>
+      </form>
+    </dialog>
+
+    <div class="search-panel" id="searchPanel" hidden>
+      <form id="searchForm" role="search">
+        <label for="searchInput">What are you craving?</label>
+        <div>
+          <input
+            id="searchInput"
+            placeholder="Try “chocolate cake”"
+            autocomplete="off"
+          /><button class="button" type="submit">Search</button
+          ><button
+            class="icon-button"
+            id="searchClose"
+            type="button"
+            aria-label="Close search"
+          >
+            ×
+          </button>
+        </div>
+        <div id="searchResults"></div>
+      </form>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>

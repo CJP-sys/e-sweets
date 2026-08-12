@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up &middot; e-Sweets</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=DM+Serif+Display&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/auth.css?v=20260804" />
+  </head>
+  <body class="login-screen">
+    <main class="login-shell auth-split-shell">
+      <section class="login-panel" aria-labelledby="registerTitle">
+        <a class="login-brand" href="index.html" aria-label="e-Sweets home">
+          <span class="login-brand-mark" aria-hidden="true">e</span>
+          <span>e-Sweets<small>HANDCRAFTED TREATS</small></span>
+        </a>
+        <div class="login-form-wrap register-form-wrap">
+          <p class="auth-kicker">JOIN THE SWEET SIDE</p>
+          <h1 id="registerTitle">Create your account</h1>
+          <p class="auth-subtitle">Save your favorites and make every order a little sweeter.</p>
+
+          <div class="auth-error-banner" id="errorBanner"></div>
+
+          <form id="registerForm" novalidate>
+          <div class="auth-field">
+            <label for="name">Full name</label>
+            <input type="text" id="name" name="name" autocomplete="name" placeholder="Enter your full name" />
+            <div class="auth-field-error" id="nameError"></div>
+          </div>
+
+          <div class="auth-field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="email" placeholder="you@example.com" />
+            <div class="auth-field-error" id="emailError"></div>
+          </div>
+
+          <div class="auth-field">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              autocomplete="new-password"
+              placeholder="At least 8 characters"
+            />
+            <div class="auth-field-error" id="passwordError"></div>
+          </div>
+
+          <div class="auth-field">
+            <label for="confirmPassword">Confirm password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              autocomplete="new-password"
+              placeholder="Enter your password again"
+            />
+            <div class="auth-field-error" id="confirmPasswordError"></div>
+          </div>
+
+          <button type="submit" class="auth-submit" id="submitBtn">
+            Create account
+          </button>
+          </form>
+
+          <div class="auth-switch">
+            Already have an account? <a href="login.html">Sign in</a>
+          </div>
+        </div>
+        <p class="login-footer">&copy; 2026 e-Sweets. Made with care.</p>
+      </section>
+      <aside class="login-visual" aria-label="A selection of handcrafted sweets">
+        <img src="assets/images/login-sweets.webp" alt="A pink celebration cake with croissants and macarons" />
+        <div class="login-visual-overlay">
+          <p>MADE FOR CELEBRATING</p>
+          <h2>Your sweetest moments, all in one place.</h2>
+          <span>Create an account to keep your details and favorite treats close at hand.</span>
+        </div>
+      </aside>
+    </main>
+
+    <script type="module">
+      import { registerUser } from "./js/auth.js";
+
+      const form = document.getElementById("registerForm");
+      const nameInput = document.getElementById("name");
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+      const confirmInput = document.getElementById("confirmPassword");
+
+      const nameError = document.getElementById("nameError");
+      const emailError = document.getElementById("emailError");
+      const passwordError = document.getElementById("passwordError");
+      const confirmError = document.getElementById("confirmPasswordError");
+      const errorBanner = document.getElementById("errorBanner");
+      const submitBtn = document.getElementById("submitBtn");
+
+      function isValidEmail(value) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      }
+
+      function clearErrors() {
+        [nameError, emailError, passwordError, confirmError].forEach(
+          (el) => (el.textContent = ""),
+        );
+        [nameInput, emailInput, passwordInput, confirmInput].forEach((el) =>
+          el.classList.remove("invalid"),
+        );
+        errorBanner.style.display = "none";
+        errorBanner.textContent = "";
+      }
+
+      function validate() {
+        let valid = true;
+
+        if (!nameInput.value.trim()) {
+          nameError.textContent = "Name is required.";
+          nameInput.classList.add("invalid");
+          valid = false;
+        }
+
+        if (!emailInput.value.trim()) {
+          emailError.textContent = "Email is required.";
+          emailInput.classList.add("invalid");
+          valid = false;
+        } else if (!isValidEmail(emailInput.value.trim())) {
+          emailError.textContent = "Enter a valid email address.";
+          emailInput.classList.add("invalid");
+          valid = false;
+        }
+
+        if (!passwordInput.value) {
+          passwordError.textContent = "Password is required.";
+          passwordInput.classList.add("invalid");
+          valid = false;
+        } else if (passwordInput.value.length < 8) {
+          passwordError.textContent = "Password must be at least 8 characters.";
+          passwordInput.classList.add("invalid");
+          valid = false;
+        }
+
+        if (confirmInput.value !== passwordInput.value) {
+          confirmError.textContent = "Passwords do not match.";
+          confirmInput.classList.add("invalid");
+          valid = false;
+        }
+
+        return valid;
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        clearErrors();
+
+        if (!validate()) return;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Creating account...";
+
+        try {
+          const result = await registerUser(
+            emailInput.value.trim(),
+            passwordInput.value,
+            nameInput.value.trim(),
+          );
+          window.location.href = result.needsEmailVerification
+            ? "verify-email.html"
+            : "account.html";
+        } catch (err) {
+          errorBanner.textContent = err.message;
+          errorBanner.style.display = "block";
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Create account";
+        }
+      });
+    </script>
+  </body>
+</html>

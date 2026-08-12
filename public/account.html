@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Account · e-Sweets</title>
+    <link rel="stylesheet" href="css/auth.css" />
+  </head>
+  <body>
+    <main class="auth-page account-page">
+      <section class="auth-card account-card" aria-labelledby="accountTitle">
+        <div class="account-heading">
+          <div>
+            <p class="auth-kicker">CUSTOMER ACCOUNT</p>
+            <h1 id="accountTitle">My profile</h1>
+          </div>
+          <a href="index.html">Back to shop</a>
+        </div>
+        <div class="auth-error-banner" id="errorBanner" role="alert"></div>
+        <div class="auth-info-banner" id="infoBanner" role="status"></div>
+        <form id="profileForm">
+          <div class="auth-field">
+            <label for="fullName">Full name</label>
+            <input id="fullName" name="fullName" autocomplete="name" required />
+          </div>
+          <div class="auth-field">
+            <label for="email">Email</label>
+            <input id="email" type="email" disabled />
+          </div>
+          <div class="profile-meta">
+            <span>Email verified</span><strong id="verifiedStatus">—</strong>
+            <span>Account role</span><strong id="roleStatus">—</strong>
+          </div>
+          <button class="auth-submit" id="saveButton" type="submit">
+            Save profile
+          </button>
+        </form>
+        <a
+          class="auth-submit auth-secondary"
+          id="ownerLink"
+          href="owner.html"
+          hidden
+          >Open owner dashboard</a
+        >
+        <button class="auth-submit auth-danger" id="logoutButton" type="button">
+          Log out
+        </button>
+      </section>
+    </main>
+    <script type="module" src="js/account.js"></script>
+  </body>
+</html>

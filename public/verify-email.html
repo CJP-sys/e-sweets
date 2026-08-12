@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify Email · e-Sweets</title>
+    <link rel="stylesheet" href="css/auth.css" />
+  </head>
+  <body>
+    <main class="auth-page">
+      <section class="auth-card" aria-labelledby="verifyTitle">
+        <p class="auth-kicker">ONE MORE STEP</p>
+        <h1 id="verifyTitle">Check your inbox</h1>
+        <p class="auth-subtitle">
+          Use the verification link sent to
+          <strong id="verificationEmail">your email</strong>.
+        </p>
+        <div class="auth-error-banner" id="errorBanner" role="alert"></div>
+        <div class="auth-info-banner" id="infoBanner" role="status"></div>
+        <button class="auth-submit" id="resendButton" type="button">
+          Resend verification email
+        </button>
+        <div class="auth-switch">
+          Verified already? <a href="login.html">Log in</a>
+        </div>
+      </section>
+    </main>
+    <script type="module">
+      import { resendVerificationEmail } from "./js/auth.js";
+
+      const email = sessionStorage.getItem("esweets-verification-email") || "";
+      const emailLabel = document.getElementById("verificationEmail");
+      const resendButton = document.getElementById("resendButton");
+      const errorBanner = document.getElementById("errorBanner");
+      const infoBanner = document.getElementById("infoBanner");
+
+      if (email) emailLabel.textContent = email;
+
+      async function handleResendVerification() {
+        errorBanner.style.display = "none";
+        infoBanner.style.display = "none";
+
+        if (!email) {
+          errorBanner.textContent =
+            "Return to registration and enter your email again.";
+          errorBanner.style.display = "block";
+          return;
+        }
+
+        resendButton.disabled = true;
+        resendButton.textContent = "Sending…";
+
+        try {
+          await resendVerificationEmail(email);
+          infoBanner.textContent = "A new verification email has been sent.";
+          infoBanner.style.display = "block";
+        } catch (error) {
+          errorBanner.textContent = error.message;
+          errorBanner.style.display = "block";
+        } finally {
+          resendButton.disabled = false;
+          resendButton.textContent = "Resend verification email";
+        }
+      }
+
+      resendButton.addEventListener("click", handleResendVerification);
+    </script>
+  </body>
+</html>
