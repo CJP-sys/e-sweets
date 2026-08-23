@@ -85,7 +85,7 @@
     </main>
 
     <script type="module">
-      import { getCustomerProfile, loginUser } from "./js/auth.js";
+      import { loginUser } from "./js/auth.js";
 
       const form = document.getElementById("loginForm");
       const emailInput = document.getElementById("email");
@@ -154,9 +154,7 @@
             return;
           }
 
-          const profile = await getCustomerProfile(user.id);
-          window.location.href =
-            profile.role === "owner" ? "owner.html" : "account.html";
+          window.location.href = "index.html";
         } catch (err) {
           if (err.code === "email_not_confirmed") {
             window.location.href = "verify-email.html";

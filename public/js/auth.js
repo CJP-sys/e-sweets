@@ -20,6 +20,13 @@ function createFriendlyAuthError(error) {
   return friendlyError;
 }
 
+// Exported so pages (e.g. account.js) can build a matching redirect
+// without duplicating the "?redirect=" logic in more than one place.
+export function createLoginRedirect() {
+  const currentPage = window.location.pathname.split("/").pop();
+  return `login.html?redirect=${encodeURIComponent(currentPage || "account.html")}`;
+}
+
 export async function registerUser(email, password, fullName) {
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -110,21 +117,60 @@ export async function getCustomerProfile(userId) {
     .single();
 
   if (error) {
+    if (error.code === "PGRST116") {
+      const user = await getCurrentUser();
+      if (user?.id === userId) {
+        return {
+          id: user.id,
+          email: user.email || "",
+          full_name: user.user_metadata?.full_name || "",
+          role: "customer",
+          created_at: user.created_at,
+          updated_at: user.updated_at || user.created_at,
+        };
+      }
+    }
     throw new Error("Your customer profile could not be loaded.");
   }
 
   return data;
 }
 
-export async function updateCustomerProfile(userId, fullName) {
+// Note: no longer takes a userId argument. The current Supabase session
+// is resolved internally so the page can never accidentally (or
+// maliciously) update a profile that isn't the signed-in user's — this
+// is a defense-in-depth measure on top of the RLS policy
+// (auth.uid() = id) that already enforces this at the database level.
+export async function updateCustomerProfile(fullName) {
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    throw new Error("You are not signed in.");
+  }
+
   const { data, error } = await supabase
     .from("profiles")
     .update({ full_name: fullName, updated_at: new Date().toISOString() })
-    .eq("id", userId)
+    .eq("id", user.id)
     .select("id, email, full_name, role, created_at, updated_at")
     .single();
 
   if (error) {
+    if (error.code === "PGRST116") {
+      // No profile row existed yet (e.g. the auto-create trigger hasn't
+      // run or was added after this account was created). Fall back to
+      // storing the name on the auth user's metadata, then re-read.
+      const { data: authData, error: authError } = await supabase.auth.updateUser(
+        { data: { full_name: fullName } },
+      );
+
+      if (!authError && authData.user) {
+        return getCustomerProfile(user.id);
+      }
+    }
     throw new Error("Your profile could not be updated.");
   }
 
@@ -142,11 +188,6 @@ export async function listCustomerProfiles() {
   }
 
   return data;
-}
-
-function createLoginRedirect() {
-  const currentPage = window.location.pathname.split("/").pop();
-  return `login.html?redirect=${encodeURIComponent(currentPage || "account.html")}`;
 }
 
 export async function requireAuth(options = {}) {
