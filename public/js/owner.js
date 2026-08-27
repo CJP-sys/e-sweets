@@ -623,7 +623,7 @@ export async function requireAuth(
       "owner",
     ],
 
-    requireVerifiedEmail = true,
+    requireVerifiedEmail = false,
   } = options;
 
   const user =

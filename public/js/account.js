@@ -7,67 +7,69 @@ import {
 
 /*
 |--------------------------------------------------------------------------
-| DOM Elements
+| DOM ELEMENTS
 |--------------------------------------------------------------------------
 */
 
-const profileForm =
-  document.querySelector(
-    "#profileForm",
-  );
+const profileForm = document.querySelector("#profileForm");
 
-const fullNameInput =
-  document.querySelector(
-    "#fullName",
-  );
+const usernameInput = document.querySelector("#username");
+const fullNameInput = document.querySelector("#fullName");
+const emailInput = document.querySelector("#email");
+const phoneInput = document.querySelector("#phone");
+const birthDateInput = document.querySelector("#birthDate");
 
-const emailInput =
-  document.querySelector(
-    "#email",
-  );
+const genderInputs = document.querySelectorAll(
+  "input[name='gender']",
+);
 
 const verifiedStatus =
-  document.querySelector(
-    "#verifiedStatus",
-  );
+  document.querySelector("#verifiedStatus");
 
 const roleStatus =
-  document.querySelector(
-    "#roleStatus",
-  );
+  document.querySelector("#roleStatus");
 
 const ownerLink =
-  document.querySelector(
-    "#ownerLink",
-  );
+  document.querySelector("#ownerLink");
 
 const logoutButton =
-  document.querySelector(
-    "#logoutButton",
-  );
+  document.querySelector("#logoutButton");
 
 const errorBanner =
-  document.querySelector(
-    "#errorBanner",
-  );
+  document.querySelector("#errorBanner");
 
 const infoBanner =
-  document.querySelector(
-    "#infoBanner",
-  );
+  document.querySelector("#infoBanner");
+
+const sidebarName =
+  document.querySelector("#sidebarName");
+
+const editProfileButton =
+  document.querySelector("#editProfileButton");
+
+const selectImageButton =
+  document.querySelector("#selectImageButton");
+
+const profileImageInput =
+  document.querySelector("#profileImage");
+
+const largeAvatar =
+  document.querySelector(".large-avatar");
+
 
 /*
 |--------------------------------------------------------------------------
-| Page State
+| PAGE STATE
 |--------------------------------------------------------------------------
 */
 
 let currentUser = null;
 let currentProfile = null;
 
+
 /*
 |--------------------------------------------------------------------------
-| Messages
+| MESSAGES
 |--------------------------------------------------------------------------
 */
 
@@ -77,12 +79,11 @@ function showError(message) {
   }
 
   errorBanner.textContent =
-    message ||
-    "Something went wrong.";
+    message || "Something went wrong.";
 
-  errorBanner.style.display =
-    "block";
+  errorBanner.style.display = "block";
 }
+
 
 function showInfo(message) {
   if (!infoBanner) {
@@ -92,52 +93,87 @@ function showInfo(message) {
   infoBanner.textContent =
     message || "";
 
-  infoBanner.style.display =
-    "block";
+  infoBanner.style.display = "block";
 }
+
 
 function clearMessages() {
   if (errorBanner) {
-    errorBanner.textContent =
-      "";
-
-    errorBanner.style.display =
-      "none";
+    errorBanner.textContent = "";
+    errorBanner.style.display = "none";
   }
 
   if (infoBanner) {
-    infoBanner.textContent =
-      "";
-
-    infoBanner.style.display =
-      "none";
+    infoBanner.textContent = "";
+    infoBanner.style.display = "none";
   }
 }
 
+
 /*
 |--------------------------------------------------------------------------
-| Loading State
+| GET SELECTED GENDER
 |--------------------------------------------------------------------------
 */
 
-function setLoadingState(
-  loading,
-) {
-  if (fullNameInput) {
-    fullNameInput.disabled =
-      loading;
+function getSelectedGender() {
+  const selected = document.querySelector(
+    "input[name='gender']:checked",
+  );
+
+  return selected?.value || "";
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| SET GENDER
+|--------------------------------------------------------------------------
+*/
+
+function setGender(gender) {
+  genderInputs.forEach((input) => {
+    input.checked =
+      input.value.toLowerCase() ===
+      String(gender || "").toLowerCase();
+  });
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| LOADING STATE
+|--------------------------------------------------------------------------
+*/
+
+function setLoadingState(loading) {
+  if (usernameInput) {
+    usernameInput.disabled = loading;
   }
 
+  if (fullNameInput) {
+    fullNameInput.disabled = loading;
+  }
+
+  if (phoneInput) {
+    phoneInput.disabled = loading;
+  }
+
+  if (birthDateInput) {
+    birthDateInput.disabled = loading;
+  }
+
+  genderInputs.forEach((input) => {
+    input.disabled = loading;
+  });
+
   /*
-  | Email is never editable on this page.
+  | Email is never editable.
   */
 
   if (emailInput) {
-    emailInput.disabled =
-      true;
-
-    emailInput.readOnly =
-      true;
+    emailInput.disabled = true;
+    emailInput.readOnly = true;
   }
 
   const submitButton =
@@ -146,71 +182,170 @@ function setLoadingState(
     );
 
   if (submitButton) {
-    submitButton.disabled =
-      loading;
+    submitButton.disabled = loading;
 
     submitButton.textContent =
       loading
         ? "Saving..."
-        : "Save Changes";
+        : "Save";
   }
 }
 
+
 /*
 |--------------------------------------------------------------------------
-| Display Account
+| DISPLAY PROFILE IMAGE
 |--------------------------------------------------------------------------
 */
 
-function displayAccount(
-  user,
-  profile,
-) {
+function displayProfileImage(profile) {
+  if (!largeAvatar) {
+    return;
+  }
+
+  const avatarUrl =
+    profile?.avatar_url ||
+    currentUser?.user_metadata?.avatar_url ||
+    "";
+
+  if (avatarUrl) {
+    largeAvatar.innerHTML = "";
+
+    largeAvatar.style.backgroundImage =
+      `url("${avatarUrl}")`;
+
+    largeAvatar.style.backgroundSize =
+      "cover";
+
+    largeAvatar.style.backgroundPosition =
+      "center";
+
+    largeAvatar.style.backgroundRepeat =
+      "no-repeat";
+  } else {
+    largeAvatar.style.backgroundImage = "";
+
+    largeAvatar.innerHTML = "♙";
+  }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| DISPLAY ACCOUNT
+|--------------------------------------------------------------------------
+*/
+
+function displayAccount(user, profile) {
   currentUser = user;
   currentProfile = profile;
 
   /*
-  |----------------------------------------------------------------------
-  | Full Name
-  |----------------------------------------------------------------------
+  |--------------------------------------------------------------------------
+  | FULL NAME
+  |--------------------------------------------------------------------------
   */
 
+  const fullName =
+    profile?.full_name ||
+    user?.user_metadata?.full_name ||
+    "";
+
   if (fullNameInput) {
-    fullNameInput.value =
-      profile?.full_name || "";
+    fullNameInput.value = fullName;
   }
 
+
   /*
-  |----------------------------------------------------------------------
-  | Email
-  |----------------------------------------------------------------------
-  |
-  | Email comes from Supabase Auth.
-  | It is NOT taken from the editable profile form.
-  |
+  |--------------------------------------------------------------------------
+  | SIDEBAR NAME
+  |--------------------------------------------------------------------------
+  */
+
+  if (sidebarName) {
+    sidebarName.textContent =
+      fullName || "Customer";
+  }
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | USERNAME
+  |--------------------------------------------------------------------------
+  */
+
+  if (usernameInput) {
+    usernameInput.value =
+      profile?.username ||
+      user?.user_metadata?.username ||
+      "";
+  }
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | EMAIL
+  |--------------------------------------------------------------------------
   */
 
   if (emailInput) {
     emailInput.value =
       user?.email || "";
 
-    emailInput.disabled =
-      true;
-
-    emailInput.readOnly =
-      true;
+    emailInput.disabled = true;
+    emailInput.readOnly = true;
   }
 
+
   /*
-  |----------------------------------------------------------------------
-  | Email Verification
-  |----------------------------------------------------------------------
+  |--------------------------------------------------------------------------
+  | PHONE
+  |--------------------------------------------------------------------------
+  */
+
+  if (phoneInput) {
+    phoneInput.value =
+      profile?.phone ||
+      user?.user_metadata?.phone ||
+      "";
+  }
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | GENDER
+  |--------------------------------------------------------------------------
+  */
+
+  setGender(
+    profile?.gender ||
+    user?.user_metadata?.gender ||
+    "",
+  );
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | DATE OF BIRTH
+  |--------------------------------------------------------------------------
+  */
+
+  if (birthDateInput) {
+    birthDateInput.value =
+      profile?.birth_date ||
+      user?.user_metadata?.birth_date ||
+      "";
+  }
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | EMAIL VERIFICATION
+  |--------------------------------------------------------------------------
   */
 
   const verified =
-    Boolean(
-      user?.email_confirmed_at,
-    );
+    Boolean(user?.email_confirmed_at);
 
   if (verifiedStatus) {
     verifiedStatus.textContent =
@@ -224,15 +359,11 @@ function displayAccount(
         : "unverified";
   }
 
+
   /*
-  |----------------------------------------------------------------------
-  | Role
-  |----------------------------------------------------------------------
-  |
-  | The role is used here only for UI.
-  |
-  | Supabase RLS must enforce actual authorization.
-  |
+  |--------------------------------------------------------------------------
+  | ACCOUNT ROLE
+  |--------------------------------------------------------------------------
   */
 
   const role =
@@ -240,29 +371,94 @@ function displayAccount(
     "customer";
 
   if (roleStatus) {
-    roleStatus.textContent =
-      role;
+    roleStatus.textContent = role;
   }
 
+
   /*
-  | Only show owner functionality to owners.
+  |--------------------------------------------------------------------------
+  | OWNER DASHBOARD
+  |--------------------------------------------------------------------------
   */
 
   if (ownerLink) {
     ownerLink.hidden =
       role !== "owner";
   }
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | PROFILE IMAGE
+  |--------------------------------------------------------------------------
+  */
+
+  displayProfileImage(profile);
 }
+
 
 /*
 |--------------------------------------------------------------------------
-| Profile Form
+| VALIDATE PROFILE
 |--------------------------------------------------------------------------
 */
 
-async function handleProfileSubmit(
-  event,
-) {
+function validateProfile() {
+  const fullName =
+    fullNameInput?.value.trim() || "";
+
+  const username =
+    usernameInput?.value.trim() || "";
+
+  const phone =
+    phoneInput?.value.trim() || "";
+
+  /*
+  | Full name
+  */
+
+  if (!fullName) {
+    return "Please enter your full name.";
+  }
+
+  if (fullName.length < 2) {
+    return "Your name must contain at least 2 characters.";
+  }
+
+  if (fullName.length > 100) {
+    return "Your name is too long.";
+  }
+
+
+  /*
+  | Username
+  */
+
+  if (username.length > 30) {
+    return "Username must not exceed 30 characters.";
+  }
+
+
+  /*
+  | Phone
+  */
+
+  if (phone.length > 0 && phone.length < 7) {
+    return "Please enter a valid phone number.";
+  }
+
+
+  return null;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PROFILE FORM SUBMIT
+|--------------------------------------------------------------------------
+*/
+
+async function handleProfileSubmit(event) {
   event.preventDefault();
 
   clearMessages();
@@ -283,78 +479,133 @@ async function handleProfileSubmit(
     return;
   }
 
-  const fullName =
-    fullNameInput.value.trim();
 
   /*
-  |----------------------------------------------------------------------
-  | Validation
-  |----------------------------------------------------------------------
+  |--------------------------------------------------------------------------
+  | VALIDATION
+  |--------------------------------------------------------------------------
   */
 
-  if (!fullName) {
-    showError(
-      "Please enter your full name.",
-    );
+  const validationError =
+    validateProfile();
 
-    fullNameInput.focus();
-
-    return;
-  }
-
-  if (fullName.length < 2) {
-    showError(
-      "Your name must contain at least 2 characters.",
-    );
-
-    fullNameInput.focus();
+  if (validationError) {
+    showError(validationError);
 
     return;
   }
 
-  if (fullName.length > 100) {
-    showError(
-      "Your name is too long.",
-    );
 
-    fullNameInput.focus();
+  /*
+  |--------------------------------------------------------------------------
+  | COLLECT DATA
+  |--------------------------------------------------------------------------
+  */
 
-    return;
-  }
+  const profileData = {
+    full_name:
+      fullNameInput.value.trim(),
+
+    username:
+      usernameInput?.value.trim() || null,
+
+    phone:
+      phoneInput?.value.trim() || null,
+
+    gender:
+      getSelectedGender() || null,
+
+    birth_date:
+      birthDateInput?.value || null,
+  };
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | LOADING
+  |--------------------------------------------------------------------------
+  */
 
   setLoadingState(true);
 
+
   try {
+
     /*
-    |----------------------------------------------------------------------
-    | IMPORTANT
-    |----------------------------------------------------------------------
-    |
-    | We DO NOT pass currentUser.id.
-    |
-    | auth.js gets the authenticated user directly
-    | from Supabase Auth.
-    |
+    |--------------------------------------------------------------------------
+    | UPDATE SUPABASE PROFILE
+    |--------------------------------------------------------------------------
     */
 
     const profile =
       await updateCustomerProfile(
-        fullName,
+        profileData,
       );
 
     currentProfile =
       profile;
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE UI
+    |--------------------------------------------------------------------------
+    */
+
     if (fullNameInput) {
       fullNameInput.value =
         profile?.full_name ||
+        profileData.full_name;
+    }
+
+    if (usernameInput) {
+      usernameInput.value =
+        profile?.username ||
+        profileData.username ||
         "";
     }
+
+    if (phoneInput) {
+      phoneInput.value =
+        profile?.phone ||
+        profileData.phone ||
+        "";
+    }
+
+    setGender(
+      profile?.gender ||
+      profileData.gender ||
+      "",
+    );
+
+    if (birthDateInput) {
+      birthDateInput.value =
+        profile?.birth_date ||
+        profileData.birth_date ||
+        "";
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | SIDEBAR
+    |--------------------------------------------------------------------------
+    */
+
+    if (sidebarName) {
+      sidebarName.textContent =
+        profile?.full_name ||
+        profileData.full_name ||
+        "Customer";
+    }
+
 
     showInfo(
       "Your profile has been updated successfully.",
     );
+
   } catch (error) {
+
     console.error(
       "Profile update failed:",
       error,
@@ -362,22 +613,164 @@ async function handleProfileSubmit(
 
     showError(
       error?.message ||
-        "Unable to update your profile.",
+      "Unable to update your profile.",
     );
+
   } finally {
-    setLoadingState(
-      false,
-    );
+
+    setLoadingState(false);
   }
 }
 
+
 /*
 |--------------------------------------------------------------------------
-| Logout
+| PROFILE IMAGE SELECT
+|--------------------------------------------------------------------------
+*/
+
+function handleSelectImage() {
+  profileImageInput?.click();
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PROFILE IMAGE PREVIEW
+|--------------------------------------------------------------------------
+*/
+
+function handleImageChange(event) {
+  clearMessages();
+
+  const file =
+    event.target.files?.[0];
+
+  if (!file) {
+    return;
+  }
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | File size
+  |--------------------------------------------------------------------------
+  |
+  | Maximum 1 MB
+  |
+  */
+
+  const maxSize =
+    1 * 1024 * 1024;
+
+  if (file.size > maxSize) {
+
+    showError(
+      "Profile image must be smaller than 1 MB.",
+    );
+
+    event.target.value = "";
+
+    return;
+  }
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | File type
+  |--------------------------------------------------------------------------
+  */
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+
+    showError(
+      "Please select a JPEG or PNG image.",
+    );
+
+    event.target.value = "";
+
+    return;
+  }
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | Preview
+  |--------------------------------------------------------------------------
+  */
+
+  const reader =
+    new FileReader();
+
+  reader.onload = () => {
+
+    if (!largeAvatar) {
+      return;
+    }
+
+    largeAvatar.innerHTML = "";
+
+    largeAvatar.style.backgroundImage =
+      `url("${reader.result}")`;
+
+    largeAvatar.style.backgroundSize =
+      "cover";
+
+    largeAvatar.style.backgroundPosition =
+      "center";
+  };
+
+  reader.readAsDataURL(file);
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | IMPORTANT
+  |--------------------------------------------------------------------------
+  |
+  | This only creates the preview.
+  |
+  | Uploading to Supabase Storage requires
+  | an upload function in auth.js.
+  |
+  */
+
+  showInfo(
+    "Image selected. Save your profile to upload it.",
+  );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| EDIT PROFILE BUTTON
+|--------------------------------------------------------------------------
+*/
+
+function handleEditProfile() {
+
+  fullNameInput?.focus();
+
+  fullNameInput?.scrollIntoView({
+    behavior: "smooth",
+    block: "center",
+  });
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| LOGOUT
 |--------------------------------------------------------------------------
 */
 
 async function handleLogoutClick() {
+
   if (
     !logoutButton ||
     logoutButton.disabled
@@ -393,21 +786,28 @@ async function handleLogoutClick() {
   logoutButton.textContent =
     "Logging out...";
 
+
   try {
+
     await logoutUser();
 
     sessionStorage.removeItem(
       "esweets-verification-email",
     );
 
+
     /*
-    | Redirect after successful logout.
+    |--------------------------------------------------------------------------
+    | Redirect
+    |--------------------------------------------------------------------------
     */
 
     window.location.replace(
       "login.html",
     );
+
   } catch (error) {
+
     console.error(
       "Logout failed:",
       error,
@@ -415,42 +815,78 @@ async function handleLogoutClick() {
 
     showError(
       error?.message ||
-        "Unable to log out. Please try again.",
+      "Unable to log out. Please try again.",
     );
 
     logoutButton.disabled =
       false;
 
     logoutButton.textContent =
-      "Log Out";
+      "Log out";
   }
 }
 
+
 /*
 |--------------------------------------------------------------------------
-| Initialize Account Page
+| NAVIGATION
+|--------------------------------------------------------------------------
+*/
+
+function setupNavigation() {
+
+  const links =
+    document.querySelectorAll(
+      ".account-nav-link",
+    );
+
+  links.forEach((link) => {
+
+    link.addEventListener(
+      "click",
+      () => {
+
+        links.forEach((item) => {
+          item.classList.remove(
+            "active",
+          );
+        });
+
+        link.classList.add(
+          "active",
+        );
+
+      },
+    );
+
+  });
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| INITIALIZE ACCOUNT PAGE
 |--------------------------------------------------------------------------
 */
 
 async function initializeAccountPage() {
+
   clearMessages();
 
   try {
+
     /*
-    |----------------------------------------------------------------------
-    | requireAuth handles:
-    |
-    | - authentication
-    | - email verification
-    | - profile loading
-    | - role checking
-    |----------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    | REQUIRE AUTHENTICATION
+    |--------------------------------------------------------------------------
     */
 
     const authState =
       await requireAuth();
 
+
     if (!authState?.user) {
+
       window.location.replace(
         createLoginRedirect(),
       );
@@ -458,10 +894,24 @@ async function initializeAccountPage() {
       return;
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | DISPLAY PROFILE
+    |--------------------------------------------------------------------------
+    */
+
     displayAccount(
       authState.user,
       authState.profile,
     );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | EVENT LISTENERS
+    |--------------------------------------------------------------------------
+    */
 
     profileForm?.addEventListener(
       "submit",
@@ -472,17 +922,44 @@ async function initializeAccountPage() {
       "click",
       handleLogoutClick,
     );
+
+    editProfileButton?.addEventListener(
+      "click",
+      handleEditProfile,
+    );
+
+    selectImageButton?.addEventListener(
+      "click",
+      handleSelectImage,
+    );
+
+    profileImageInput?.addEventListener(
+      "change",
+      handleImageChange,
+    );
+
+    setupNavigation();
+
+
   } catch (error) {
+
     console.error(
       "Account initialization failed:",
       error,
     );
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | NOT AUTHENTICATED
+    |--------------------------------------------------------------------------
+    */
+
     if (
       error?.status === 401 ||
-      error?.code ===
-        "not_authenticated"
+      error?.code === "not_authenticated"
     ) {
+
       window.location.replace(
         createLoginRedirect(),
       );
@@ -490,16 +967,18 @@ async function initializeAccountPage() {
       return;
     }
 
+
     showError(
       error?.message ||
-        "Unable to load your account.",
+      "Unable to load your account.",
     );
   }
 }
 
+
 /*
 |--------------------------------------------------------------------------
-| Start
+| START
 |--------------------------------------------------------------------------
 */
 
