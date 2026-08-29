@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify Email · e-Sweets</title>
+    <link rel="stylesheet" href="css/auth.css" />
+  </head>
+  <body>
+    <main class="auth-page">
+      <section class="auth-card" aria-labelledby="verifyTitle">
+        <p class="auth-kicker">ONE MORE STEP</p>
+        <h1 id="verifyTitle">Check your inbox</h1>
+        <p class="auth-subtitle">
+          Use the verification link sent to
+          <strong id="verificationEmail">your email</strong>.
+        </p>
+        <div class="auth-error-banner" id="errorBanner" role="alert"></div>
+        <div class="auth-info-banner" id="infoBanner" role="status"></div>
+        <button class="auth-submit" id="resendButton" type="button">
+          Resend verification email
+        </button>
+        <div class="auth-switch">
+          Verified already? <a href="login.html">Log in</a>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="js/verify-email.js"></script>
+  </body>
+</html>

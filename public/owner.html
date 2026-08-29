@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Owner Dashboard · e-Sweets</title>
+    <link rel="stylesheet" href="css/auth.css" />
+  </head>
+  <body>
+    <main class="auth-page account-page">
+      <section class="auth-card owner-card" aria-labelledby="ownerTitle">
+        <div class="account-heading">
+          <div>
+            <p class="auth-kicker">OWNER ONLY</p>
+            <h1 id="ownerTitle">Customer profiles</h1>
+          </div>
+          <a href="account.html">My account</a>
+        </div>
+        <div class="auth-error-banner" id="errorBanner" role="alert"></div>
+        <div class="profile-table-wrap">
+          <table class="profile-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Joined</th>
+              </tr>
+            </thead>
+            <tbody id="profileRows">
+              <tr>
+                <td colspan="4">Loading profiles…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <button class="auth-submit auth-danger" id="logoutButton" type="button">
+          Log out
+        </button>
+      </section>
+    </main>
+    <script type="module" src="js/owner.js"></script>
+  </body>
+</html>

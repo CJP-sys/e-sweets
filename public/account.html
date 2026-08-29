@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>My Account · e-Sweets</title>
+
+    <link rel="stylesheet" href="css/auth.css" />
+  </head>
+
+  <body>
+
+    <main class="account-page">
+
+      <!-- =====================================================
+           LEFT SIDEBAR
+           ===================================================== -->
+
+      <aside class="account-sidebar">
+
+        <!-- User summary -->
+        <div class="account-user">
+
+          <div class="account-avatar">
+            <span>♙</span>
+          </div>
+
+          <div class="account-user-info">
+            <strong id="sidebarName">Customer</strong>
+
+            <button type="button" id="editProfileButton">
+              ✎ Edit Profile
+            </button>
+          </div>
+
+        </div>
+
+
+        <!-- Navigation -->
+        <nav class="account-navigation">
+
+          <div class="account-nav-section">
+
+            <div class="account-nav-title">
+              <span class="nav-icon">♙</span>
+              <strong>My Account</strong>
+            </div>
+
+            <a
+              href="#profile"
+              class="account-nav-link active"
+            >
+              Profile
+            </a>
+
+            <a
+              href="#addresses"
+              class="account-nav-link"
+            >
+              Addresses
+            </a>
+
+            <a
+              href="#password"
+              class="account-nav-link"
+            >
+              Change Password
+            </a>
+
+            <a
+              href="#privacy"
+              class="account-nav-link"
+            >
+              Privacy Settings
+            </a>
+
+            <a
+              href="#notifications"
+              class="account-nav-link"
+            >
+              Notification Settings
+            </a>
+
+            <a
+              href="#orders"
+              class="account-nav-link"
+            >
+              Order Settings
+            </a>
+
+          </div>
+
+
+          <div class="account-nav-section secondary">
+
+            <a href="#purchases" class="account-main-link">
+              <span>▣</span>
+              <strong>My Purchase</strong>
+            </a>
+
+            <a href="#notifications" class="account-main-link">
+              <span>♧</span>
+              <strong>Notifications</strong>
+            </a>
+
+            <a href="#vouchers" class="account-main-link">
+              <span>◇</span>
+              <strong>My Vouchers</strong>
+            </a>
+
+            <a href="#coins" class="account-main-link">
+              <span>◎</span>
+              <strong>My Sweets Coins</strong>
+            </a>
+
+          </div>
+
+        </nav>
+
+
+        <!-- Back to store -->
+        <a href="index.html" class="back-to-shop">
+          ← Back to E-Sweets
+        </a>
+
+      </aside>
+
+
+      <!-- =====================================================
+           MAIN CONTENT
+           ===================================================== -->
+
+      <section class="account-content">
+
+        <div class="profile-panel">
+
+          <!-- Header -->
+
+          <header class="profile-header">
+
+            <div>
+              <h1>My Profile</h1>
+
+              <p>
+                Manage and protect your account
+              </p>
+            </div>
+
+          </header>
+
+
+          <!-- Messages -->
+
+          <div
+            class="auth-error-banner"
+            id="errorBanner"
+            role="alert"
+          ></div>
+
+          <div
+            class="auth-info-banner"
+            id="infoBanner"
+            role="status"
+          ></div>
+
+
+          <!-- Profile -->
+
+          <form id="profileForm">
+
+            <div class="profile-layout">
+
+
+              <!-- LEFT FORM -->
+
+              <div class="profile-form">
+
+                <!-- Username -->
+
+                <div class="profile-field">
+
+                  <label for="username">
+                    Username
+                  </label>
+
+                  <div class="field-content">
+
+                    <input
+                      id="username"
+                      name="username"
+                      autocomplete="username"
+                    />
+
+                    <small>
+                      Username can only be changed once.
+                    </small>
+
+                  </div>
+
+                </div>
+
+
+                <!-- Full name -->
+
+                <div class="profile-field">
+
+                  <label for="fullName">
+                    Name
+                  </label>
+
+                  <div class="field-content">
+
+                    <input
+                      id="fullName"
+                      name="fullName"
+                      autocomplete="name"
+                      required
+                    />
+
+                  </div>
+
+                </div>
+
+
+                <!-- Email -->
+
+                <div class="profile-field">
+
+                  <label for="email">
+                    Email
+                  </label>
+
+                  <div class="field-content inline-value">
+
+                    <input
+                      id="email"
+                      type="email"
+                      disabled
+                    />
+
+                    <button
+                      type="button"
+                      class="change-button"
+                    >
+                      Change
+                    </button>
+
+                  </div>
+
+                </div>
+
+
+                <!-- Phone -->
+
+                <div class="profile-field">
+
+                  <label for="phone">
+                    Phone Number
+                  </label>
+
+                  <div class="field-content inline-value">
+
+                    <input
+                      id="phone"
+                      type="tel"
+                      placeholder="Enter phone number"
+                    />
+
+                    <button
+                      type="button"
+                      class="change-button"
+                    >
+                      Change
+                    </button>
+
+                  </div>
+
+                </div>
+
+
+                <!-- Gender -->
+
+                <div class="profile-field">
+
+                  <label>
+                    Gender
+                  </label>
+
+                  <div class="field-content">
+
+                    <div class="radio-options">
+
+                      <label>
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="Male"
+                        />
+                        Male
+                      </label>
+
+                      <label>
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="Female"
+                        />
+                        Female
+                      </label>
+
+                      <label>
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="Other"
+                        />
+                        Other
+                      </label>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+
+                <!-- Date of birth -->
+
+                <div class="profile-field">
+
+                  <label for="birthDate">
+                    Date of birth
+                  </label>
+
+                  <div class="field-content">
+
+                    <input
+                      id="birthDate"
+                      type="date"
+                    />
+
+                    <small>
+                      Your birthday can only be changed according
+                      to your account settings.
+                    </small>
+
+                  </div>
+
+                </div>
+
+
+                <!-- Existing metadata -->
+
+                <div class="account-status">
+
+                  <div>
+                    <span>Email verified</span>
+
+                    <strong id="verifiedStatus">
+                      —
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>Account role</span>
+
+                    <strong id="roleStatus">
+                      —
+                    </strong>
+                  </div>
+
+                </div>
+
+
+                <!-- Save -->
+
+                <div class="profile-actions">
+
+                  <button
+                    class="save-profile-button"
+                    id="saveButton"
+                    type="submit"
+                  >
+                    Save
+                  </button>
+
+                </div>
+
+              </div>
+
+
+              <!-- RIGHT AVATAR -->
+
+              <div class="profile-photo">
+
+                <div class="profile-photo-line"></div>
+
+                <div class="large-avatar">
+
+                  <span>♙</span>
+
+                </div>
+
+                <button
+                  type="button"
+                  class="select-image-button"
+                  id="selectImageButton"
+                >
+                  Select Image
+                </button>
+
+                <input
+                  type="file"
+                  id="profileImage"
+                  accept=".jpg,.jpeg,.png"
+                  hidden
+                />
+
+                <p>
+                  File size: maximum 1 MB
+                </p>
+
+                <p>
+                  File extension: .JPEG, .PNG
+                </p>
+
+              </div>
+
+            </div>
+
+          </form>
+
+
+          <!-- OWNER -->
+
+          <a
+            class="owner-dashboard-button"
+            id="ownerLink"
+            href="owner.html"
+            hidden
+          >
+            Open owner dashboard
+          </a>
+
+
+          <!-- LOGOUT -->
+
+          <button
+            class="logout-button"
+            id="logoutButton"
+            type="button"
+          >
+            Log out
+          </button>
+
+        </div>
+
+      </section>
+
+    </main>
+
+
+    <script type="module" src="js/account.js"></script>
+
+  </body>
+</html>
