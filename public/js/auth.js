@@ -155,7 +155,7 @@ export async function getCustomerProfile(userId) {
   }
 
   if (!data && user?.id === profileUserId) {
-    return {
+    const fallbackProfile = {
       id: user.id,
       email: user.email || "",
       full_name: user.user_metadata?.full_name || "",
@@ -168,6 +168,32 @@ export async function getCustomerProfile(userId) {
       created_at: user.created_at,
       updated_at: user.updated_at || user.created_at,
     };
+
+    const { data: insertedProfile, error: insertError } = await supabase
+      .from("profiles")
+      .upsert(
+        {
+          id: user.id,
+          email: user.email || "",
+          full_name: fallbackProfile.full_name,
+          username: fallbackProfile.username,
+          phone: fallbackProfile.phone,
+          gender: fallbackProfile.gender,
+          birth_date: fallbackProfile.birth_date,
+          avatar_url: fallbackProfile.avatar_url,
+          role: "customer",
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "id" },
+      )
+      .select("id, email, full_name, username, phone, gender, birth_date, avatar_url, role, created_at, updated_at")
+      .maybeSingle();
+
+    if (insertError) {
+      return fallbackProfile;
+    }
+
+    return insertedProfile || fallbackProfile;
   }
 
   return data;
@@ -195,34 +221,34 @@ export async function updateCustomerProfile(profileData) {
     throw new Error("You are not signed in.");
   }
 
+  const profilePayload = {
+    id: user.id,
+    email: user.email || "",
+    full_name: fullName,
+    username: values.username || null,
+    phone: values.phone || null,
+    gender: values.gender || null,
+    birth_date: values.birth_date || null,
+    avatar_url: values.avatar_url || null,
+    role: "customer",
+    updated_at: new Date().toISOString(),
+  };
+
   const { data, error } = await supabase
     .from("profiles")
-    .update({
-      full_name: fullName,
-      username: values.username || null,
-      phone: values.phone || null,
-      gender: values.gender || null,
-      birth_date: values.birth_date || null,
-      avatar_url: values.avatar_url || null,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", user.id)
+    .upsert(profilePayload, { onConflict: "id" })
     .select("id, email, full_name, username, phone, gender, birth_date, avatar_url, role, created_at, updated_at")
     .single();
 
   if (error) {
-    if (error.code === "PGRST116") {
-      // No profile row existed yet (e.g. the auto-create trigger hasn't
-      // run or was added after this account was created). Fall back to
-      // storing the name on the auth user's metadata, then re-read.
-      const { data: authData, error: authError } = await supabase.auth.updateUser(
-        { data: { full_name: fullName } },
-      );
+    const { data: authData, error: authError } = await supabase.auth.updateUser(
+      { data: { full_name: fullName } },
+    );
 
-      if (!authError && authData.user) {
-        return getCustomerProfile(user.id);
-      }
+    if (!authError && authData.user) {
+      return getCustomerProfile(user.id);
     }
+
     throw new Error("Your profile could not be updated.");
   }
 

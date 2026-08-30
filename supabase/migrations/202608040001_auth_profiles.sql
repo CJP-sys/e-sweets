@@ -85,7 +85,7 @@ with check (id = auth.uid());
 
 grant select on public.profiles to authenticated;
 revoke update on public.profiles from authenticated;
-grant update (full_name, updated_at) on public.profiles to authenticated;
+grant update (full_name, username, phone, gender, birth_date, avatar_url, updated_at) on public.profiles to authenticated;
 
 -- Promote exactly one existing account from the Supabase SQL editor by
 -- replacing the email below. Never expose a service-role key in browser code.
