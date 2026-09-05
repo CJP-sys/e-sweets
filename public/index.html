@@ -18,10 +18,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://images.unsplash.com" />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Alex+Brush&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="styles.css" />
     <script type="module" src="js/home.js" defer></script>
   </head>
   <body>
@@ -39,12 +39,7 @@
 
     <!-- Navigation -->
     <header class="site-header">
-      <nav class="nav shell" aria-label="Main navigation">
-        <a class="brand" href="index.html" aria-label="e-Sweets home">
-          <span class="brand-mark" aria-hidden="true">e<span>◌</span></span>
-          <span>e-Sweets<small>BAKED WITH JOY</small></span>
-        </a>
-
+      <nav class="nav nav-centered shell" aria-label="Main navigation">
         <button
           class="menu-toggle icon-button"
           id="menuToggle"
@@ -56,15 +51,19 @@
         </button>
 
         <div class="nav-links" id="navLinks">
-          <a class="active" href="#home" aria-current="location">Home</a>
-          <a href="#categories">Categories</a>
           <a href="#shop">Shop</a>
           <a href="#custom">Custom Orders</a>
           <a href="#story">Our Story</a>
           <a href="#contact">Contact</a>
         </div>
 
+        <a class="brand" href="index.html" aria-label="e-Sweets home">
+          <img src="assets/images/esweets-logo.png" alt="e-Sweets" class="brand-logo" />
+        </a>
+
         <div class="nav-actions">
+          <a class="account-link nav-text-link" href="login.html">Login</a>
+          <a class="nav-text-link" href="register.html">Sign&nbsp;Up</a>
           <button
             class="icon-button"
             id="searchOpen"
@@ -72,126 +71,75 @@
           >
             ⌕
           </button>
-          <a
-            class="icon-button account-link"
-            href="login.html"
-            aria-label="Customer account"
-            >♙</a
-          >
           <button class="cart-button" id="cartOpen" aria-label="Open cart">
-            <span aria-hidden="true">⌑</span><span class="cart-label">Cart</span
-            ><b id="cartCount">0</b>
+            <img src="assets/images/cart-icon.png" alt="" class="cart-icon" /><b id="cartCount">0</b>
           </button>
-          <a class="button button-small" href="#shop">Order now</a>
         </div>
       </nav>
     </header>
 
     <main id="main">
       <!-- Hero -->
-      <section class="hero" id="home">
+      <section class="hero-photo" id="home">
+        <img
+          class="hero-image"
+          src="assets/images/hero-photo.jpg"
+          alt="Freshly baked pastries arranged for a celebration"
+        />
         <div class="hero-copy shell">
-          <p class="eyebrow">FRESH FROM OUR KITCHEN</p>
-          <h1>A little sweetness<br />for <em>every moment.</em></h1>
+          <h1 class="hero-script">
+            A little sweetness<br />for every moment.
+          </h1>
           <p class="hero-lede">
-            Freshly prepared cakes, pastries, cookies and dessert boxes—made for
-            everyday cravings, thoughtful gifts and unforgettable celebrations.
+            Freshly made cakes, pastries, cookies, and treats for every craving
+            and celebration.
           </p>
-          <div class="hero-buttons">
-            <a class="button" href="#shop"
-              >Shop our sweets <span aria-hidden="true">→</span></a
-            >
-            <a class="button button-ghost" href="#custom"
-              >Create a custom order</a
-            >
-          </div>
-          <ul class="trust-list" aria-label="Why order with us">
-            <li><span>✓</span> Freshly prepared</li>
-            <li><span>✓</span> Secure ordering</li>
-            <li><span>✓</span> Pickup & delivery</li>
-          </ul>
-        </div>
-        <div
-          class="hero-visual"
-          role="img"
-          aria-label="Pink celebration cake with piped frosting"
-        >
-          <div class="hero-note">
-            <span>♥</span><strong>Made fresh</strong
-            ><small>with quality ingredients</small>
-          </div>
-        </div>
-        <div class="hero-ribbon">
-          <span>CAKES</span> ✦ <span>COOKIES</span> ✦ <span>CUPCAKES</span> ✦
-          <span>PASTRIES</span> ✦ <span>DESSERT BOXES</span>
+          <a class="button hero-cta" href="#shop">Order now</a>
         </div>
       </section>
 
-      <!-- Categories -->
-      <section class="section categories shell" id="categories">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">FIND YOUR FAVORITE</p>
-            <h2>Sweetness, your way.</h2>
-          </div>
-          <p>
-            From quiet afternoon treats to centerpieces for the biggest
-            celebrations.
-          </p>
+      <!-- Featured Selection -->
+      <section class="section featured shell" id="categories">
+        <div class="section-heading featured-heading">
+          <h2>Featured Selection</h2>
         </div>
-        <div class="category-grid">
-          <a
-            class="category-card category-large"
-            href="#shop"
-            data-filter="Cakes"
-          >
+        <div class="featured-grid">
+          <a class="featured-card" href="#shop" data-filter="Pastries">
             <img
-              src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=900&q=82"
-              alt="Chocolate layer cake topped with berries"
+              src="assets/images/featured-donuts.png"
+              alt="Pink glazed donuts"
               loading="lazy"
               decoding="async"
-              sizes="(max-width: 720px) 100vw, 50vw"
             />
-            <span
-              ><b>Cakes</b><small>For every reason to celebrate</small
-              ><i>Shop cakes →</i></span
-            >
           </a>
-          <a class="category-card" href="#shop" data-filter="Cupcakes">
+          <a class="featured-card" href="#shop" data-filter="Cookies">
             <img
-              src="https://images.unsplash.com/photo-1486427944299-d1955d23e34d?auto=format&fit=crop&w=700&q=82"
-              alt="Assorted frosted cupcakes"
+              src="assets/images/featured-cookies.png"
+              alt="Assorted fresh cookies"
               loading="lazy"
               decoding="async"
-              sizes="(max-width: 720px) 50vw, 25vw"
             />
-            <span
-              ><b>Cupcakes</b
-              ><small>Little joys, beautifully topped</small></span
-            >
           </a>
-          <a class="category-card" href="#shop" data-filter="Cookies">
+          <a class="featured-card" href="#shop" data-filter="Cupcakes">
             <img
-              src="https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=700&q=82"
-              alt="Fresh chocolate chip cookies"
+              src="assets/images/featured-cupcakes.png"
+              alt="Pink and chocolate frosted cupcakes"
               loading="lazy"
               decoding="async"
-              sizes="(max-width: 720px) 50vw, 25vw"
             />
-            <span><b>Cookies</b><small>Chewy, crisp and shareable</small></span>
           </a>
-          <a class="category-card" href="#shop" data-filter="Pastries">
+          <a class="featured-card" href="#custom">
             <img
-              src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=700&q=82"
-              alt="Golden flaky croissants"
+              src="assets/images/featured-wedding-cake.png"
+              alt="Tiered pink wedding cake with roses"
               loading="lazy"
               decoding="async"
-              sizes="(max-width: 720px) 100vw, 25vw"
             />
-            <span
-              ><b>Pastries</b><small>Buttery layers, baked fresh</small></span
-            >
           </a>
+        </div>
+        <div class="featured-dots" aria-hidden="true">
+          <span class="is-active"></span><span></span><span></span
+          ><span></span><span></span>
         </div>
       </section>
 
@@ -221,42 +169,30 @@
         </div>
       </section>
 
-      <section class="custom section shell" id="custom">
-        <div class="custom-copy">
-          <p class="eyebrow">MADE JUST FOR YOU</p>
-          <h2>Your celebration,<br /><em>made sweeter.</em></h2>
-          <p>
-            Planning something special? Tell us your colors, flavors, theme and
-            guest count. We’ll help shape a dessert made for your moment.
-          </p>
-          <ul>
-            <li>Birthday & wedding cakes</li>
-            <li>Corporate gifts</li>
-            <li>Party dessert tables</li>
-            <li>Personalized dessert boxes</li>
-          </ul>
-          <button class="button button-dark" id="customOrderOpen">
-            Request a custom order <span>→</span>
-          </button>
-        </div>
-        <div class="custom-collage">
-          <img
-            class="collage-main"
-            src="https://images.unsplash.com/photo-1535254973040-607b474cb50d?auto=format&fit=crop&w=900&q=82"
-            alt="Elegant celebration cake with flowers"
-            loading="lazy"
-            decoding="async"
-            sizes="(max-width: 720px) 100vw, 50vw"
-          />
-          <img
-            class="collage-small"
-            src="https://images.unsplash.com/photo-1587668178277-295251f900ce?auto=format&fit=crop&w=500&q=82"
-            alt="Pink frosted cupcakes"
-            loading="lazy"
-            decoding="async"
-            sizes="150px"
-          />
-          <span class="scribble">made for<br />your moment ♥</span>
+      <section class="custom custom-photo section" id="custom">
+        <div class="shell custom-inner">
+          <div class="custom-copy">
+            <img
+              src="assets/images/esweets-logo.png"
+              alt="e-Sweets"
+              class="custom-script-logo"
+            />
+            <h2>
+              Celebrate every milestone<br />with a customized cake from
+              e-Sweets
+            </h2>
+            <button class="button button-white" id="customOrderOpen">
+              Learn more
+            </button>
+          </div>
+          <div class="custom-collage">
+            <img
+              src="assets/images/custom-photo.png"
+              alt="Row of tiered pink wedding cakes with roses"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
         </div>
       </section>
 
