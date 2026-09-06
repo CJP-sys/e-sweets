@@ -134,67 +134,131 @@ export async function getCurrentUser() {
 }
 
 export async function getCustomerProfile(userId) {
-  const user = await getCurrentUser();
-  const profileUserId = userId || user?.id;
 
-  if (!profileUserId) {
-    const authError = new Error("You are not signed in.");
-    authError.code = "not_authenticated";
-    authError.status = 401;
-    throw authError;
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+
+  if (userError || !user) {
+
+    const error = new Error(
+      "You are not signed in.",
+    );
+
+    error.code = "not_authenticated";
+    error.status = 401;
+
+    throw error;
   }
 
-  const { data, error } = await supabase
+
+  const profileUserId =
+    userId || user.id;
+
+
+  const {
+    data,
+    error,
+  } = await supabase
     .from("profiles")
-    .select("id, email, full_name, username, phone, gender, birth_date, avatar_url, role, created_at, updated_at")
+    .select(
+      `
+      id,
+      email,
+      full_name,
+      username,
+      phone,
+      gender,
+      birth_date,
+      avatar_url,
+      role,
+      created_at,
+      updated_at
+      `,
+    )
     .eq("id", profileUserId)
     .maybeSingle();
 
+
   if (error) {
-    throw new Error("Your customer profile could not be loaded.");
+
+    console.error(
+      "Profile loading error:",
+      error,
+    );
+
+    throw new Error(
+      error.message ||
+      "Your customer profile could not be loaded.",
+    );
   }
 
-  if (!data && user?.id === profileUserId) {
-    const fallbackProfile = {
+
+  /*
+  |--------------------------------------------------------------------------
+  | PROFILE DOES NOT EXIST
+  |--------------------------------------------------------------------------
+  */
+
+  if (!data) {
+
+    const newProfile = {
       id: user.id,
-      email: user.email || "",
-      full_name: user.user_metadata?.full_name || "",
-      username: user.user_metadata?.username || null,
-      phone: user.user_metadata?.phone || null,
-      gender: user.user_metadata?.gender || null,
-      birth_date: user.user_metadata?.birth_date || null,
-      avatar_url: user.user_metadata?.avatar_url || null,
+
+      email:
+        user.email || "",
+
+      full_name:
+        user.user_metadata?.full_name || "",
+
+      username:
+        user.user_metadata?.username || null,
+
+      phone:
+        user.user_metadata?.phone || null,
+
+      gender:
+        user.user_metadata?.gender || null,
+
+      birth_date:
+        user.user_metadata?.birth_date || null,
+
+      avatar_url:
+        user.user_metadata?.avatar_url || null,
+
       role: "customer",
-      created_at: user.created_at,
-      updated_at: user.updated_at || user.created_at,
     };
 
-    const { data: insertedProfile, error: insertError } = await supabase
-      .from("profiles")
-      .upsert(
-        {
-          id: user.id,
-          email: user.email || "",
-          full_name: fallbackProfile.full_name,
-          username: fallbackProfile.username,
-          phone: fallbackProfile.phone,
-          gender: fallbackProfile.gender,
-          birth_date: fallbackProfile.birth_date,
-          avatar_url: fallbackProfile.avatar_url,
-          role: "customer",
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: "id" },
-      )
-      .select("id, email, full_name, username, phone, gender, birth_date, avatar_url, role, created_at, updated_at")
-      .maybeSingle();
 
-    if (insertError) {
-      return fallbackProfile;
+    const {
+      data: createdProfile,
+      error: createError,
+    } =
+      await supabase
+        .from("profiles")
+        .insert(newProfile)
+        .select()
+        .single();
+
+
+    if (createError) {
+
+      console.error(
+        "Profile creation error:",
+        createError,
+      );
+
+      throw new Error(
+        "Your customer profile could not be created.",
+      );
     }
 
-    return insertedProfile || fallbackProfile;
+
+    return createdProfile;
   }
+
 
   return data;
 }
