@@ -205,12 +205,34 @@ export async function getCustomerProfile(userId) {
 // is a defense-in-depth measure on top of the RLS policy
 // (auth.uid() = id) that already enforces this at the database level.
 export async function updateCustomerProfile(profileData) {
-  const values = typeof profileData === "string" ? { full_name: profileData } : profileData || {};
+  const values =
+    typeof profileData === "string"
+      ? { full_name: profileData }
+      : profileData || {};
+
   const fullName = normalizeName(values.full_name);
 
-  if (!fullName) throw new Error("Please enter your full name.");
-  if (fullName.length < 2) throw new Error("Your name must contain at least 2 characters.");
-  if (fullName.length > 100) throw new Error("Your name is too long.");
+  if (!fullName) {
+    throw new Error("Please enter your full name.");
+  }
+
+  if (fullName.length < 2) {
+    throw new Error(
+      "Your name must contain at least 2 characters.",
+    );
+  }
+
+  if (fullName.length > 100) {
+    throw new Error(
+      "Your name is too long.",
+    );
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | GET CURRENT USER
+  |--------------------------------------------------------------------------
+  */
 
   const {
     data: { user },
@@ -218,39 +240,183 @@ export async function updateCustomerProfile(profileData) {
   } = await supabase.auth.getUser();
 
   if (userError || !user) {
-    throw new Error("You are not signed in.");
+    const error = new Error(
+      "You are not signed in.",
+    );
+
+    error.code = "not_authenticated";
+    error.status = 401;
+
+    throw error;
   }
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | DO NOT CHANGE ROLE
+  |--------------------------------------------------------------------------
+  */
+
+  const { data: existingProfile, error: profileError } =
+    await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+
+  if (profileError) {
+    console.error(
+      "Profile lookup failed:",
+      profileError,
+    );
+
+    throw new Error(
+      "Unable to load your profile.",
+    );
+  }
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | KEEP EXISTING ROLE
+  |--------------------------------------------------------------------------
+  */
+
+  const existingRole =
+    existingProfile?.role || "customer";
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | PROFILE DATA
+  |--------------------------------------------------------------------------
+  */
 
   const profilePayload = {
     id: user.id,
-    email: user.email || "",
-    full_name: fullName,
-    username: values.username || null,
-    phone: values.phone || null,
-    gender: values.gender || null,
-    birth_date: values.birth_date || null,
-    avatar_url: values.avatar_url || null,
-    role: "customer",
-    updated_at: new Date().toISOString(),
+
+    email:
+      user.email || "",
+
+    full_name:
+      fullName,
+
+    username:
+      values.username?.trim() || null,
+
+    phone:
+      values.phone?.trim() || null,
+
+    gender:
+      values.gender || null,
+
+    birth_date:
+      values.birth_date || null,
+
+    avatar_url:
+      values.avatar_url || null,
+
+    role:
+      existingRole,
+
+    updated_at:
+      new Date().toISOString(),
   };
 
-  const { data, error } = await supabase
+
+  /*
+  |--------------------------------------------------------------------------
+  | UPSERT PROFILE
+  |--------------------------------------------------------------------------
+  */
+
+  const {
+    data,
+    error,
+  } = await supabase
     .from("profiles")
-    .upsert(profilePayload, { onConflict: "id" })
-    .select("id, email, full_name, username, phone, gender, birth_date, avatar_url, role, created_at, updated_at")
+    .upsert(
+      profilePayload,
+      {
+        onConflict: "id",
+      },
+    )
+    .select(
+      `
+      id,
+      email,
+      full_name,
+      username,
+      phone,
+      gender,
+      birth_date,
+      avatar_url,
+      role,
+      created_at,
+      updated_at
+      `,
+    )
     .single();
 
+
+  /*
+  |--------------------------------------------------------------------------
+  | HANDLE DATABASE ERROR
+  |--------------------------------------------------------------------------
+  */
+
   if (error) {
-    const { data: authData, error: authError } = await supabase.auth.updateUser(
-      { data: { full_name: fullName } },
+    console.error(
+      "Supabase profile update error:",
+      error,
     );
 
-    if (!authError && authData.user) {
-      return getCustomerProfile(user.id);
+    if (error.code === "23505") {
+      throw new Error(
+        "That username is already being used.",
+      );
     }
 
-    throw new Error("Your profile could not be updated.");
+    throw new Error(
+      error.message ||
+      "Your profile could not be updated.",
+    );
   }
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | UPDATE SUPABASE AUTH METADATA
+  |--------------------------------------------------------------------------
+  */
+
+  const {
+    error: metadataError,
+  } =
+    await supabase.auth.updateUser({
+      data: {
+        full_name: fullName,
+        username:
+          values.username?.trim() || null,
+        phone:
+          values.phone?.trim() || null,
+        gender:
+          values.gender || null,
+        birth_date:
+          values.birth_date || null,
+        avatar_url:
+          values.avatar_url || null,
+      },
+    });
+
+
+  if (metadataError) {
+    console.warn(
+      "Auth metadata update failed:",
+      metadataError,
+    );
+  }
+
 
   return data;
 }
