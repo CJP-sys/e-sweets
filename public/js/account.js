@@ -415,6 +415,9 @@ function validateProfile() {
   const phone =
     phoneInput?.value.trim() || "";
 
+  const birthDate =
+    birthDateInput?.value || "";
+
   /*
   | Full name
   */
@@ -431,6 +434,10 @@ function validateProfile() {
     return "Your name is too long.";
   }
 
+  if (!/^[\p{L}\p{M}]+(?:[ '\u2019-][\p{L}\p{M}]+)*$/u.test(fullName)) {
+    return "Your name can only contain letters, spaces, apostrophes, and hyphens.";
+  }
+
 
   /*
   | Username
@@ -440,17 +447,95 @@ function validateProfile() {
     return "Username must not exceed 30 characters.";
   }
 
+  if (username && !/^[a-zA-Z0-9_]+$/.test(username)) {
+    return "Username can only contain letters, numbers, and underscores.";
+  }
+
 
   /*
   | Phone
   */
 
-  if (phone.length > 0 && phone.length < 7) {
-    return "Please enter a valid phone number.";
+  if (phone) {
+    const phoneDigits = phone.replace(/\D/g, "");
+
+    if (!/^[+]?[0-9() .-]+$/.test(phone) || phoneDigits.length < 7 || phoneDigits.length > 15) {
+      return "Please enter a valid phone number.";
+    }
+  }
+
+
+  /*
+  | Birthday
+  */
+
+  if (birthDate) {
+    const parsedBirthDate = new Date(`${birthDate}T00:00:00`);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const [yearText, month, day] = birthDate.split("-");
+    const year = Number(yearText);
+
+    if (!/^\d{4}$/.test(yearText || "")) {
+      return "Birthday year must contain exactly 4 digits.";
+    }
+
+    if (
+      !/^\d{4}-\d{2}-\d{2}$/.test(birthDate) ||
+      Number.isNaN(parsedBirthDate.getTime()) ||
+      parsedBirthDate.getFullYear() !== year ||
+      parsedBirthDate.getMonth() !== month - 1 ||
+      parsedBirthDate.getDate() !== day
+    ) {
+      return "Please enter a valid birthday.";
+    }
+
+    if (parsedBirthDate > today) {
+      return "Birthday cannot be in the future.";
+    }
   }
 
 
   return null;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| BIRTHDAY INPUT
+|--------------------------------------------------------------------------
+*/
+
+function handleBirthDateInput() {
+  if (!birthDateInput) {
+    return;
+  }
+
+  const yearText =
+    birthDateInput.value.split("-")[0] || "";
+
+  if (yearText.length > 4) {
+    birthDateInput.value = "";
+
+    showError(
+      "Birthday year must contain exactly 4 digits.",
+    );
+  }
+}
+
+
+function setupBirthDateInput() {
+  if (!birthDateInput) {
+    return;
+  }
+
+  birthDateInput.max =
+    new Date().toISOString().split("T")[0];
+
+  birthDateInput.addEventListener(
+    "input",
+    handleBirthDateInput,
+  );
 }
 
 
@@ -552,8 +637,24 @@ async function handleProfileSubmit(event) {
         profileData,
       );
 
-    currentProfile =
-      profile;
+      currentProfile = profile;
+
+    displayAccount(
+      currentUser,
+      profile
+    );
+
+    displayProfileImage(profile);
+
+    selectedAvatarFile = null;
+
+    if (profileImageInput) {
+      profileImageInput.value = "";
+    }
+
+    showInfo(
+      "Your profile has been updated successfully."
+    );
 
 
     /*
@@ -943,6 +1044,8 @@ async function initializeAccountPage() {
       "change",
       handleImageChange,
     );
+
+    setupBirthDateInput();
 
     setupNavigation();
 

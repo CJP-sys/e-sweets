@@ -292,6 +292,69 @@ export async function updateCustomerProfile(profileData) {
     );
   }
 
+  if (!/^[\p{L}\p{M}]+(?:[ '\u2019-][\p{L}\p{M}]+)*$/u.test(fullName)) {
+    throw new Error(
+      "Your name can only contain letters, spaces, apostrophes, and hyphens.",
+    );
+  }
+
+  const username = values.username?.trim() || "";
+
+  if (username.length > 30) {
+    throw new Error(
+      "Username must not exceed 30 characters.",
+    );
+  }
+
+  if (username && !/^[a-zA-Z0-9_]+$/.test(username)) {
+    throw new Error(
+      "Username can only contain letters, numbers, and underscores.",
+    );
+  }
+
+  const phone = values.phone?.trim() || "";
+  const phoneDigits = phone.replace(/\D/g, "");
+
+  if (phone && (!/^[+]?[0-9() .-]+$/.test(phone) || phoneDigits.length < 7 || phoneDigits.length > 15)) {
+    throw new Error(
+      "Please enter a valid phone number.",
+    );
+  }
+
+  const birthDate = values.birth_date || "";
+
+  if (birthDate) {
+    const parsedBirthDate = new Date(`${birthDate}T00:00:00`);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const [yearText, month, day] = birthDate.split("-");
+    const year = Number(yearText);
+
+    if (!/^\d{4}$/.test(yearText || "")) {
+      throw new Error(
+        "Birthday year must contain exactly 4 digits.",
+      );
+    }
+
+    if (
+      !/^\d{4}-\d{2}-\d{2}$/.test(birthDate) ||
+      Number.isNaN(parsedBirthDate.getTime()) ||
+      parsedBirthDate.getFullYear() !== year ||
+      parsedBirthDate.getMonth() !== month - 1 ||
+      parsedBirthDate.getDate() !== day
+    ) {
+      throw new Error(
+        "Please enter a valid birthday.",
+      );
+    }
+
+    if (parsedBirthDate > today) {
+      throw new Error(
+        "Birthday cannot be in the future.",
+      );
+    }
+  }
+
   /*
   |--------------------------------------------------------------------------
   | GET CURRENT USER
@@ -366,16 +429,16 @@ export async function updateCustomerProfile(profileData) {
       fullName,
 
     username:
-      values.username?.trim() || null,
+      username || null,
 
     phone:
-      values.phone?.trim() || null,
+      phone || null,
 
     gender:
       values.gender || null,
 
     birth_date:
-      values.birth_date || null,
+      birthDate || null,
 
     avatar_url:
       values.avatar_url || null,
@@ -461,13 +524,13 @@ export async function updateCustomerProfile(profileData) {
       data: {
         full_name: fullName,
         username:
-          values.username?.trim() || null,
+          username || null,
         phone:
-          values.phone?.trim() || null,
+          phone || null,
         gender:
           values.gender || null,
         birth_date:
-          values.birth_date || null,
+          birthDate || null,
         avatar_url:
           values.avatar_url || null,
       },
@@ -487,7 +550,7 @@ export async function updateCustomerProfile(profileData) {
 
 export async function uploadAvatarImage(file) {
   if (!file) {
-    return null;
+    throw new Error("No image selected.");
   }
 
   const user = await getCurrentUser();
@@ -499,18 +562,148 @@ export async function uploadAvatarImage(file) {
     throw error;
   }
 
-  const extension = file.type === "image/png" ? "png" : "jpg";
-  const path = `${user.id}/avatar.${extension}`;
-  const { error } = await supabase.storage
-    .from("avatars")
-    .upload(path, file, { upsert: true, contentType: file.type });
+  // ---------------------------------------------------------
+  // Validate file type
+  // ---------------------------------------------------------
 
-  if (error) {
-    throw new Error("Your profile image could not be uploaded.");
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+    throw new Error("Only JPG and PNG images are allowed.");
   }
 
-  const { data } = supabase.storage.from("avatars").getPublicUrl(path);
-  return data.publicUrl;
+  // ---------------------------------------------------------
+  // Validate file size
+  // ---------------------------------------------------------
+
+  const maxSize = 1 * 1024 * 1024;
+
+  if (file.size > maxSize) {
+    throw new Error(
+      "Profile image must be smaller than 1 MB."
+    );
+  }
+
+  // ---------------------------------------------------------
+  // Determine extension
+  // ---------------------------------------------------------
+
+  let extension;
+
+  if (file.type === "image/png") {
+    extension = "png";
+  } else {
+    extension = "jpg";
+  }
+
+  // ---------------------------------------------------------
+  // UNIQUE FILE NAME
+  // ---------------------------------------------------------
+
+  const fileName =
+    `avatar-${Date.now()}.${extension}`;
+
+  const filePath =
+    `${user.id}/${fileName}`;
+
+  console.log("Uploading avatar...");
+  console.log("User:", user.id);
+  console.log("Bucket:", "avatars");
+  console.log("Path:", filePath);
+  console.log("Type:", file.type);
+  console.log("Size:", file.size);
+
+
+  // ---------------------------------------------------------
+  // UPLOAD
+  // ---------------------------------------------------------
+
+  const {
+    data,
+    error
+  } = await supabase.storage
+    .from("avatars")
+    .upload(
+      filePath,
+      file,
+      {
+        cacheControl: "3600",
+        contentType: file.type,
+        upsert: false
+      }
+    );
+
+
+  // ---------------------------------------------------------
+  // HANDLE STORAGE ERROR
+  // ---------------------------------------------------------
+
+  if (error) {
+
+    console.error(
+      "SUPABASE STORAGE ERROR:",
+      error
+    );
+
+    console.error(
+      "Storage error message:",
+      error.message
+    );
+
+    console.error(
+      "Storage error status:",
+      error.status
+    );
+
+    console.error(
+      "Storage error statusCode:",
+      error.statusCode
+    );
+
+    console.error(
+      "Storage error name:",
+      error.error
+    );
+
+    throw new Error(
+      error.message ||
+      "Profile image upload failed."
+    );
+  }
+
+
+  // ---------------------------------------------------------
+  // GET PUBLIC URL
+  // ---------------------------------------------------------
+
+  const {
+    data: publicUrlData
+  } = supabase.storage
+    .from("avatars")
+    .getPublicUrl(filePath);
+
+
+  const publicUrl =
+    publicUrlData?.publicUrl;
+
+  
+  if (!publicUrl) {
+    throw new Error(
+      "Image uploaded, but its public URL could not be created."
+    );
+  }
+
+
+  console.log(
+    "Avatar uploaded successfully:",
+    publicUrl
+  );
+
+
+  return publicUrl;
 }
 
 export async function listCustomerProfiles() {
